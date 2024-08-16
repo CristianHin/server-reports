@@ -23,7 +23,7 @@ pipeline {
             }
         }
 
-        stage('Install prisma clienta') {
+        stage('Install prisma client') {
             steps {
                 script {
                     // Ejecutar docker-compose up desde la raíz del monorepo
@@ -52,8 +52,6 @@ pipeline {
                         -Dsonar.projectKey=${projectKey} \
                         -Dsonar.sources=src \
                         -Dsonar.tests=src \
-                        -Dsonar.host.url=http://sonar-sonarqube-1:9000 \
-                        -Dsonar.token=token \
                         -Dsonar.coverage.exclusions=**/main.ts,src/dataaccess/dataaccess.service.ts \
                         -Dsonar.exclusions=**/main.ts,**/*.spec.ts,**/node_modules/** \
                         -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \

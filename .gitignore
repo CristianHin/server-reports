@@ -5,7 +5,6 @@
 # volumes
 /pgadmin
 /postgres
-/sonar-project.properties
 
 # Logs
 logs

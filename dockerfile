@@ -11,11 +11,10 @@ COPY package*.json ./
 RUN npm install --only=production
 
 # Copia el resto del código fuente de la aplicación al contenedor
-COPY dist ./
+COPY dist ./dist
+COPY prisma ./prisma
 
-COPY .env ./
-
-COPY prisma ./
+COPY .env .env
 
 RUN npx prisma generate
 

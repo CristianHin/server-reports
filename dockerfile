@@ -13,6 +13,7 @@ RUN npm install --only=production
 # Copia el resto del código fuente de la aplicación al contenedor
 COPY dist ./dist
 COPY prisma ./prisma
+COPY fonts ./fonts
 
 COPY .env .env
 

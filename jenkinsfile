@@ -1,0 +1,102 @@
+pipeline {
+    agent any
+
+    environment {
+        SONARQUBE_SERVER = 'sonar-qube'
+        SONAR_SCANNER = 'sonarqube'
+        POSTGRES_DB = "${env.POSTGRES_DB}"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/CristianHin/server-reports.git'
+            }
+        }
+
+        stage('Install dependencies') {
+            steps {
+                script {
+                    // Ejecutar docker-compose up desde la raíz del monorepo
+                    sh 'npm i'
+                }
+            }
+        }
+
+        stage('Install prisma clienta') {
+            steps {
+                script {
+                    // Ejecutar docker-compose up desde la raíz del monorepo
+                    sh 'npx prisma generate'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    // Ejecutar docker-compose up desde la raíz del monorepo
+                    sh 'npm run test:cov'
+                }
+            }
+        }
+
+        stage('SonarQube Scan') {
+            steps {
+                script {
+                    // Run SonarQube analysis
+                    def scanner = tool SONAR_SCANNER
+                    def projectKey = env.JOB_NAME
+                    withSonarQubeEnv(SONARQUBE_SERVER) {
+                        sh """${scanner}/bin/sonar-scanner \
+                        -Dsonar.projectKey=${projectKey} \
+                        -Dsonar.sources=src \
+                        -Dsonar.tests=src \
+                        -Dsonar.host.url=http://sonar-sonarqube-1:9000 \
+                        -Dsonar.token=token \
+                        -Dsonar.coverage.exclusions=**/main.ts,src/dataaccess/dataaccess.service.ts \
+                        -Dsonar.exclusions=**/main.ts,**/*.spec.ts,**/node_modules/** \
+                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                        -Dsonar.test.inclusions=**/*.spec.ts,**/*.test.ts"""
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                waitForQualityGate abortPipeline: true
+            }
+        }
+
+        stage('Create .env file') {
+            steps {
+                script {
+                    sh '''
+                    echo "DATABASE_URL=${POSTGRES_DB}" > .env
+                    '''
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def projectKey = env.JOB_NAME
+                    def projectNumber = env.BUILD_NUMBER
+                    // Construir la imagen Docker y usar el número del build como tag
+                    sh '''
+                    docker build -t ${projectKey}:${projectNumber} .
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up workspace after build
+            cleanWs()
+        }
+    }
+}

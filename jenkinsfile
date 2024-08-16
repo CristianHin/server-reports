@@ -48,7 +48,7 @@ pipeline {
                     def scanner = tool SONAR_SCANNER
                     def projectKey = env.JOB_NAME
                     withSonarQubeEnv(SONARQUBE_SERVER) {
-                        sh """echo "sonar.projectKey=${projectKey}" >> .sonar-project.properties
+                        sh """echo "sonar.projectKey=${projectKey}" >> sonar-project.properties
                         ${scanner}/bin/sonar-scanner"""
                     }
                 }

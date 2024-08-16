@@ -1,6 +1,6 @@
+import { join } from 'path';
 import { Content } from 'pdfmake/interfaces';
 import { DateFormatter } from 'src/helpers';
-const isProduction = process.env.NODE_ENV === 'production';
 
 interface HeaderOptions {
   title?: string;
@@ -8,9 +8,10 @@ interface HeaderOptions {
   showLogo?: boolean;
   showDate?: boolean;
 }
+const pathLogo = join(__dirname, '../../assets', `tucan-code-logo.png`);
 
 const logo: Content = {
-  image: isProduction ? 'assets/tucan-code-logo.png' : 'src/assets/tucan-code-logo.png',
+  image: pathLogo,
   width: 100,
   height: 100,
   alignment: 'center',

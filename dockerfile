@@ -11,7 +11,11 @@ COPY package*.json ./
 RUN npm install --only=production
 
 # Copia el resto del código fuente de la aplicación al contenedor
-COPY . .
+COPY dist ./
+
+COPY .env ./
+
+RUN npx prisma generate
 
 # Expone el puerto 3000 para que la aplicación esté disponible
 EXPOSE 3000

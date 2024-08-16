@@ -15,6 +15,8 @@ COPY dist ./
 
 COPY .env ./
 
+COPY prisma ./
+
 RUN npx prisma generate
 
 # Expone el puerto 3000 para que la aplicación esté disponible

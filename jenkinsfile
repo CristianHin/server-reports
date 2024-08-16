@@ -79,6 +79,16 @@ pipeline {
             }
         }
 
+        stage('Build Microservice') {
+            steps {
+                script {
+                    sh """
+                    npm run build
+                    """
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {

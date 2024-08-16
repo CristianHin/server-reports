@@ -17,7 +17,6 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 script {
-                    // Ejecutar docker-compose up desde la raíz del monorepo
                     sh 'npm i'
                 }
             }
@@ -26,7 +25,6 @@ pipeline {
         stage('Install prisma client') {
             steps {
                 script {
-                    // Ejecutar docker-compose up desde la raíz del monorepo
                     sh 'npx prisma generate'
                 }
             }
@@ -35,7 +33,6 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Ejecutar docker-compose up desde la raíz del monorepo
                     sh 'npm run test:cov'
                 }
             }
@@ -44,7 +41,6 @@ pipeline {
         stage('SonarQube Scan') {
             steps {
                 script {
-                    // Run SonarQube analysis
                     def scanner = tool SONAR_SCANNER
                     def projectKey = env.JOB_NAME
                     withSonarQubeEnv(SONARQUBE_SERVER) {
@@ -87,7 +83,6 @@ pipeline {
                 script {
                     def projectKey = env.JOB_NAME
                     def projectNumber = env.BUILD_NUMBER
-                    // Construir la imagen Docker y usar el número del build como tag
                     sh """
                     docker build -t ${projectKey}:${projectNumber} .
                     """
@@ -101,16 +96,12 @@ pipeline {
                     def projectKey = env.JOB_NAME
                     def projectNumber = env.BUILD_NUMBER
                     def containerName = "${projectKey}-container"
-
-                    // Detener y eliminar el contenedor si ya existe
                     sh """
                     if [ \$(docker ps -a -q -f name=${containerName}) ]; then
                         docker stop ${containerName}
                         docker rm ${containerName}
                     fi
                     """
-
-                    // Desplegar la imagen creada en un contenedor
                     sh """
                     docker run -d --name ${containerName} --network microservices -p 9090:9090 ${projectKey}:${projectNumber}
                     """
@@ -121,7 +112,6 @@ pipeline {
 
     post {
         always {
-            // Clean up workspace after build
             cleanWs()
         }
     }

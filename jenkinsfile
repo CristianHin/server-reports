@@ -112,7 +112,7 @@ pipeline {
 
                     // Desplegar la imagen creada en un contenedor
                     sh """
-                    docker run -d --name ${containerName} -p 9090:9090 ${projectKey}:${projectNumber}
+                    docker run -d --name ${containerName} --network microservices -p 9090:9090 ${projectKey}:${projectNumber}
                     """
                 }
             }

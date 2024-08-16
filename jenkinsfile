@@ -74,6 +74,7 @@ pipeline {
                 script {
                     sh '''
                     echo "DATABASE_URL=${POSTGRES_DB}" > .env
+                    echo "NODE_ENV=production" >> .env
                     '''
                 }
             }

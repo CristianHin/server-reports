@@ -1,5 +1,6 @@
 import { Content } from 'pdfmake/interfaces';
 import { DateFormatter } from 'src/helpers';
+const isProduction = process.env.NODE_ENV === 'production';
 
 interface HeaderOptions {
   title?: string;
@@ -9,7 +10,7 @@ interface HeaderOptions {
 }
 
 const logo: Content = {
-  image: 'src/assets/tucan-code-logo.png',
+  image: isProduction ? 'assets/tucan-code-logo.png' : 'src/assets/tucan-code-logo.png',
   width: 100,
   height: 100,
   alignment: 'center',

@@ -49,13 +49,7 @@ pipeline {
                     def projectKey = env.JOB_NAME
                     withSonarQubeEnv(SONARQUBE_SERVER) {
                         sh """${scanner}/bin/sonar-scanner \
-                        -Dsonar.projectKey=${projectKey} \
-                        -Dsonar.sources=src \
-                        -Dsonar.tests=src \
-                        -Dsonar.coverage.exclusions=**/main.ts,src/dataaccess/dataaccess.service.ts \
-                        -Dsonar.exclusions=**/main.ts,**/*.spec.ts,**/node_modules/** \
-                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-                        -Dsonar.test.inclusions=**/*.spec.ts,**/*.test.ts"""
+                        -Dsonar.projectKey=${projectKey}"""
                     }
                 }
             }

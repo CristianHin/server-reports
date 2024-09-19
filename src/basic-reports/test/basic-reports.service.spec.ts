@@ -17,7 +17,7 @@ describe('BasicReportsService', () => {
     $connect: jest.fn(),
     $disconnect: jest.fn(),
     employees: {
-      findUnique: jest.fn(), // Aquí mockeamos la función employees.findUnique
+      findUnique: jest.fn(),
     },
   };
 

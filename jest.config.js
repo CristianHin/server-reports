@@ -1,5 +1,4 @@
 module.exports = {
-    // Otras configuraciones...
     moduleNameMapper: {
       '^src/(.*)$': '<rootDir>/src/$1',
     },
